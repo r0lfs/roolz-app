@@ -1,0 +1,157 @@
+.row
+  .col.s12.card
+    p.intro
+      | Welcome to the Examples Page. Here you can view all the information about how the rules work, as well as examples for each rule type. Just click on the Container or Basic Links below to get started!
+
+    ul.collapsible[data-collapsible="accordion"]
+      li
+        .collapsible-header
+          | Container Rules
+        .container-roolz.collapsible-body
+          .row
+            .col.s12.basics
+              h3
+                | Container Rule Basics
+              br
+              p.description
+                |  Container Rules accept multiple children rule types of either the Container or Basic rule type, then process those rules, and return true or false based on the children rules results and depending on the specific Container Rool. As container rules can process multiple rules, if we were to returned the processed JSON object, things could get lengthy. For a quick example, let's look at Rool::Any with the child rules Rool::True and Rool::False. Before being processed, the JSON isn't too bad: 
+                br
+              p.jsoned
+                == @any_json  
+              br
+              |  And here is the JSON after it has processed: 
+              br
+              p.jsoned
+                == @any_processed
+              br
+              |  As you can see, Any's result attribute has been set to true, along with Rool::True. However, Rool::False result is false, and an error array is included. Because the JSONified object includes the failed objects message, as well as Any's message array, it takes up a lot of space. The Roolz app, after processing will only return True or False, and only display messages if they exist, like so: 
+              br
+              p.results
+
+              p
+                | Result: 
+                == @any.result 
+              - if @any.message
+                p.message
+                  |  Failure Message(s): 
+                  br
+                  == @any.message
+              p
+                | Click on any of the Rules Below to get more information about how they work!
+          ul.collapsible[data-collapsible="accordion"]
+            li
+              .collapsible-header
+                | Rool::All
+              .row.collapsible-body
+                .col.s12.def
+                  h3.rool-name
+                    | Rool::All
+                  br
+                  p.description
+                    |  The All Rool is a container rule type which accepts an unlimited number of children rules that can be of the Basic or Container type. When the All rule processes, it procceses all of it's child rules. If all the child rules return true, All will also return true. If any of the child rules return false, All will return false, and include an array of messages as to why each rule that failed, failed. in the example below, All is processed with two Rool::True children. Here is the JSON before it is processed: 
+                    br
+                  p.jsoned
+                    == @all_json
+                  br
+                  |  And here is the result after it has processed: 
+                  br
+                  p.results
+
+                  p
+                    | Result:
+                    == @all.result
+                  - if @all.message
+                    p.message
+                      |  Failure Message(s): 
+                      br
+                      == @all.message
+      
+            li
+              .collapsible-header
+                | Rool::Any      
+              .row.collapsible-body
+                .col.s12.def
+                  h3.rool-name
+                    | Rool::Any
+                  br
+                  p.description
+                    |  The Any Rool is a container rule type which accepts an unlimited number of children rules. If any the child rules return true, Any will also return true. If all of the child rules return false, Any will return false, and include an array of messages as to why each rule that failed, failed. If some chile rules return true, but some false, Any will return true, but also include an array of failure messages for the failed rules. in the example below, All is processed with two children, Rool::True and Rool::False. Here is the JSON before it is processed: 
+                    br
+                  p.jsoned
+                    == @any_json
+                  br
+                  |  And here is the result and failure message: 
+                  br
+                  p.results
+
+                  p
+                    | Result:
+                    == @any.result
+                  - if @any.message
+                    p.message
+                      |  Failure Message(s): 
+                      br
+                      == @any.message
+
+            li
+              .collapsible-header
+                |  Rool::Not
+              .row.collapsible-body
+                .col.s12.def
+                  h3.rool-name
+                    | Rool::Not
+                  br
+                  p.description
+                    |  The Not Rool is the oddball Container rule, as it only accepets a single child rule. However, if the child rule is a container type, the child can have multiple rules nested inside it. The Not rule returns the opposite of what the child rule returns. So if the child return false, Not will return true and visa versa. Due to this, Not will always return a failure message, either because it failed (because the child returned true), or because the child failed and will have messages, even though Not returned true. In the example below, we'll use Not with the child rule Rool::Any, with the children Rool::False and Rool::True. Here is the JSON before it is processed: 
+                    br
+                  p.jsoned
+                    == @not_json
+                  br
+                  |  And here is the result and failure message: 
+                  br
+                  p.results
+
+                  p
+                    | Result:
+                    == @not_rool.result
+                  - if @not_rool.message
+                    p.message
+                      |  Failure Message(s): 
+                      br
+            li
+              .collapsible-header
+                |  Rool::Iterate
+              .row.collapsible-body
+                .col.s12.def
+                  h3.rool-name
+                    | Rool::Iterate
+                  br
+                  p.description
+                    |  The Iterate rule is useful if you want to process an array of data with a basic rool type. For example, lets say you have a hash of data that includes an array {a_key: [1,2,3,4,5,6,7,8,9]}, and you want to see if any of the elements are greater than 5. We'll pass in the key to access the array from the hash (:a_key), the operand we're checking each element against (5), the basic rule we're using to evaluate (Rool::LessThan) (as a quick aside, the lessthan and greaterthan rules check to see whether the operand is less than or greater than the data value, so since we're checking if any elements are greater than 5, we're using Rool::LessThan to see if 5 is less than any of the data elements). And finally, since we want to see if any of the elements are greater than 5, we'll be using Rool::Any as the container rool type. Please note that unlike the other container rule types, Iterate requires all 4 arguments to be present for initialization. Here is the data JSON before it is processed: 
+                    br
+                  p.jsoned
+                    |  data: 
+                    == @data1 
+                    br
+                    == @iterate_json
+                  br
+                  |  And here is the result and failure message: 
+                  br
+                  p.results
+
+                  p
+                    | Result: 
+                    == @iterate.result 
+                  - if @iterate.message
+                    p.message
+                      |  Failure Message(s): 
+                      br
+                      == @iterate.message
+                  p
+                    |  Also, the data itself remains unchanged:
+                    == @data1
+      li
+        .collapsible-header
+          | Basic Rules
+        .basic-roolz.collapsible-body
+          .row

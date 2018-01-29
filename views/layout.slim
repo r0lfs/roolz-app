@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    link[href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"]
+    link[rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"]
+    link[rel="stylesheet" href="app.css"]
+
+    script[type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"]
+    script[type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"]
+    script[type="javascript" src="app.js"]
+  body
+    nav
+      .nav-wrapper
+        a.brand-logo.center[href="/"]
+          | Roolz
+        ul
+          li
+            a[href="/examples"]
+              | Examples and Use
+    .container
+      == yield

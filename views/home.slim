@@ -1,0 +1,31 @@
+ul#dropdown1.dropdown-content
+  li.data[type="all"]
+    a[href="#" data-activates="container-form"]
+    |  Rool::All
+  li.data[type="any"]
+    a[href="#" data-activates="container-form"]
+    |  Rool::Any
+  li.data[type="not"]
+    a[href="#" data-activates="container-form"]
+    | Rool::Not
+  li.data[type="iterate"]
+    a[href="#" data-activates="container-form"]
+    | Rool::Iterate
+
+.row
+  .col.s12.card
+	  p.intro
+			|  Welcome to the Roolz App, a data processing application that applies a set of rules to data you provide to evaluate a condition of your choosing. Before starting, we suggest going through the 
+			a href="/examples"
+			  | Examples Tutorial
+			|  to ensure you understand what the rules do and how to use the app. If you already know how to use Roolz, just click 'Start Processing' below to begin!
+			br
+
+	  ul.collapsible[data-collapsible="accordion"]
+	    li
+	      .collapsible-header
+	        | Start Processing
+	      .process-input.collapsible-body
+	        |  Select a Rool Type to get started:
+	        a.dropdown-button.btn[href="#" data-activates="dropdown1"]
+            | Select
