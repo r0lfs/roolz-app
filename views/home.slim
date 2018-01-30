@@ -1,17 +1,3 @@
-ul#dropdown1.dropdown-content
-  li.data[type="all"]
-    a[href="#" data-activates="container-form"]
-    |  Rool::All
-  li.data[type="any"]
-    a[href="#" data-activates="container-form"]
-    |  Rool::Any
-  li.data[type="not"]
-    a[href="#" data-activates="container-form"]
-    | Rool::Not
-  li.data[type="iterate"]
-    a[href="#" data-activates="container-form"]
-    | Rool::Iterate
-
 .row
   .col.s12.card
 	  p.intro
@@ -20,12 +6,45 @@ ul#dropdown1.dropdown-content
 			  | Examples Tutorial
 			|  to ensure you understand what the rules do and how to use the app. If you already know how to use Roolz, just click 'Start Processing' below to begin!
 			br
+      .process-input
+        |  Select a Rool Type to get started:
+        br
+          select.browser-default.start-rule
+            option[value='' disabled selected]
+              |  Choose a Rool
+            optgroup[label='Container Rules']
+	            option[value='Rool::All']
+	              |  Rool::All
+	            option[value='Rool::Any']
+	              |  Rool::Any
+	            option[value='Rool::Not']
+	              |  Rool::Not
+	            option[value='Rool::Iterate']
+	              |  Rool::Iterate
 
-	  ul.collapsible[data-collapsible="accordion"]
-	    li
-	      .collapsible-header
-	        | Start Processing
-	      .process-input.collapsible-body
-	        |  Select a Rool Type to get started:
-	        a.dropdown-button.btn[href="#" data-activates="dropdown1"]
-            | Select
+            optgroup[label='Basic Rules']
+              option[value='Rool::Blank']
+                |  Rool::Blank
+              option[value='Rool::Email']
+                |  Rool::Email
+              option[value='Rool::Equal']
+                |  Rool::Email
+              option[value='Rool::False']
+                |  Rool::False
+              option[value='Rool::GreaterThan']
+                |  Rool::GreaterThan
+              option[value='Rool::Include']
+                |  Rool::Include
+              option[value='Rool::LessThan']
+                |  Rool::LessThan
+              option[value='Rool::Regex']
+                |  Rool::Regex
+              option[value='Rool::Send']
+                |  Rool::Send
+              option[value='Rool::Subset']
+                |  Rool::Subset
+              option[value='Rool::True']
+                |  Rool::True
+
+
+
