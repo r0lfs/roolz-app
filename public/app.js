@@ -1,76 +1,79 @@
 
 class DynamicRoolz{
   constructor(){
-    //count is how many rools have been selcted
+    //count is how many rools have been selected
     this.count = 0;
-    //a hash where each value(count at time of selection) is a key to an array of children rools, whose value is count at time of selection
-    this.dependents = [];
+    this.containerRoolz = '<optgroup label="Container Rules"><option data-type="container" value="Rool::All"> Rool::All</option><option data-type="container" value="Rool::Any"> Rool::Any</option><option data-type="container" value="Rool::Not"> Rool::Not</option><option data-type="container" value="Rool::Iterate"> Rool::Iterate</option></optgroup>'
+    
+
+    this.basicRoolz = '<optgroup label="Basic Rules"><option data-type="basic" value="Rool::Blank"> Rool::Blank</option><option data-type="basic" value="Rool::Email"> Rool::Email</option><option data-type="basic" value="Rool::Equal"> Rool::Email</option><option data-type="basic" value="Rool::False"> Rool::False</option><option data-type="basic" value="Rool::GreaterThan"> Rool::GreaterThan</option><option data-type="basic" value="Rool::Include"> Rool::Include</option><option data-type="basic" value="Rool::LessThan"> Rool::LessThan</option><option data-type="basic" value="Rool::Regex"> Rool::Regex</option><option data-type="basic" value="Rool::Send"> Rool::Send</option><option data-type="basic" value="Rool::Subset"> Rool::Subset</option><option data-type="basic" value="Rool::True"> Rool::True</option></optgroup>'
   }
-  gnuBas(val, par) {
-    let attributeIn = [`<p class='dyna'>Enter the operand that the rule will be evaluating against here: </p>`,
-      `<input type="text" id="operand${this.count}" name="operand" placeholder="Enter the operand here" class='dyna'></input>`,
-      "<p class='dyna'>Enter the data key used to access a value in the datahash here </p>",
-      `<input type="text" id="datakey${this.count}" name="datakey" placeholder="Enter your data key here" class='dyna'></input>`];
-    let connect = $('#testkid' + val);
 
-    // if rool count is 0, then this is the first rool initialized
-    if (this.count < 1){
-      connect.append(`<p class='dyna'>This is the first Basic Rool, and therefore the only Rool.</p>`);
-      attributeIn.join();
-      connect.append(attributeIn);
+  setOnSelect(selected, roolType, roolActual){
+    selected.data('rool',roolActual);
+    selected.data('type', roolType);
+    if (roolActual == 'Rool::Iterate'){
+      this.gnuIterate(selected);
+    }else if (roolType == 'basic'){
+      this.gnuBasic(selected)
     }else{
-      let dataSet = `<p class='hide' data-count='${this.count}' data-parent='${val}'></p>`; 
-      attributeIn.unshift(dataSet); 
-      attributeIn.join();
-
-      connect.append(`<p class='dyna'>This is Rool-${this.count}. It is a child of Container Rool-${val}.</p>`);
-      connect.append(attributeIn);
-      this.count ++;
-      let loadOpt = this.listMake(val);
-      connect.append(loadOpt);
-      connect.append(`<div id='testkid${this.count}' class='dyna tk'></div>`);
-
+      this.gnuContainer(selected);
     }
   }
 
-  listMake(dataCon){
-    let choices = [
-      `<select class="browser-default dynarool" data-count="${this.count}" data-parent="${dataCon}"><option disabled="" selected="" value=""> Choose a Rool</option>`,
-      '<optgroup label="Container Rules"><option data-type="container" value="Rool::All"> Rool::All</option><option data-type="container" value="Rool::Any"> Rool::Any</option>', 
-      '<option data-type="container" value="Rool::Not"> Rool::Not</option><option data-type="container" value="Rool::Iterate"> Rool::Iterate</option></optgroup>',
-      '<optgroup label="Basic Rules"><option data-type="basic" value="Rool::Blank"> Rool::Blank</option><option data-type="basic" value="Rool::Email"> Rool::Email</option>',
-      '<option data-type="basic" value="Rool::Equal"> Rool::Email</option><option data-type="basic" value="Rool::False"> Rool::False</option>',
-      '<option data-type="basic" value="Rool::GreaterThan"> Rool::GreaterThan</option><option data-type="basic" value="Rool::Include"> Rool::Include</option>',
-      '<option data-type="basic" value="Rool::LessThan"> Rool::LessThan</option><option data-type="basic" value="Rool::Regex"> Rool::Regex</option>',
-      '<option data-type="basic" value="Rool::Send"> Rool::Send</option><option data-type="basic" value="Rool::Subset"> Rool::Subset</option>',
-      '<option data-type="basic" value="Rool::True"> Rool::True</option></optgroup><optgroup label="Delete Rool"><option data-type="destroy" value="destroy"> Destroy Rool and Children</option></optgroup></select>'
-      ];
-    let answer = choices.join();
+  gnuBasic(selected) {
+    let parent = selected.data('parent');
 
-    return answer;
+    let gnuHtml = `<p>Enter the operand that the rule will be evaluating against here: </p><input type="text" id="operand${this.count}" name="operand" placeholder="Enter the operand here"></input><p>Enter the data key used to access a value in the datahash here. Make sure it's in the same format as your hash above:</p><input type="text" id="datakey${this.count}" name="datakey" placeholder="Enter your data key here"></input>`;
+
+    if (selected.data('rool') == 'Rool::Send') {
+      let sentMethod = `<p>Enter the method that will be applied in string form here: </p><input type="text" id="mthd${this.count}" name="method" placeholder="Enter the method here"></input><p>Select the Basic Rool to be applied: </p>`;
+
+      let basic = sentMethod + `<select class='browser-default' class='subRool' id=sentRool${this.count}'><option disabled selected value>Choose a Rool</option`+ this.basicRoolz + '</select'
+
+      gnuHtml = gnuHtml + basic;
+    }
+
+    if (this.count > 0){
+      selected.before(`<p id='statement${this.count}'>The rule below is Rool-${this.count}. It is a child rule of Rool-${parent}</p>`);
+    }
+
+    selected.append(gnuHtml);
+    this.count ++;
   }
 
-  gnuCon(val, par) {
+  gnuContainer(selected) {
+    let parent = selected.data('count');
+    let grandparent = selected.data('parent');
+    let col = parseInt(selected.data('col'), 10) - 1;
+    let offset = 12 - col;
     this.count ++;
-    let connect = $('#testkid' + val);
-    if (this.count < 2) {
-      let replace = this.listMake(val);
-      connect.append(`<p class='dyna'>This is Container Rool-${this.count}. It is a child of Container Rool-${val}.</p>`);
-      connect.append(replace);
+
+    let nextRool = `<select class='browser-default' id='rool${this.count}' data-count='${this.count}' data-parent='${parent}' data-col='${col}' data-type='null' data-rool='null' data-basrool='null'  data-conrool='null' data-operand='null' data-key='null' data-mthd='null'><option disabled selected value>Choose a Rool</option`;
+    let conMerge = nextRool + this.containerRoolz;
+    let basMerge = conMerge + this.basicRoolz;
+    let fullMerge = basMerge + `<optgroup label="Delete Rool"><option data-type="destroy" value="destroy"> Destroy Rool and Children</option></optgroup></select>`;
+    let gnuHtml = fullMerge + `<div class="col s${col} offset-s${offset}" id='testkid${this.count}'></div>`;
+
+    if (parent == 0) {
+      selected.before('The rule below is Rool-0. It is the initial rule and all other rules will be children');
+    } else {
+      selected.before(`<p id='statement${parent}'>The rule below is Rool-${parent}. It is a child rule of Rool-${grandparent}</p>`);
+    }
+    console.log('col is ' + col);
+    console.log(gnuHtml);
+    if (col > 6) {
+      let nextDiv = $('#testkid' + parent);
+      nextDiv.append(gnuHtml);
     }else{
-      let replace = this.listMake(val);
-      connect.append(`<p class='dyna'>This is Container Rool-${this.count}. It is a child of Container Rool-${val}.</p>`);
-
-      connect.append(replace);
-      connect.append(`<div id='testkid${this.count}' class='dyna tk'></div>`);
-
-      this.count ++;
-      let gnuChild = this.listMake(par);
-      connect.append(`<p class='dyna'>This is Container Rool-${this.count}. It is a child of Container Rool-${val}.</p>`);
-      connect.append(gnuChild);
+      alert(`Due to spacing issues, you will only be able to nest Basic rool types within Rool-${parent} going forward.`)
     }
 
     
+  }
+
+  gnuIterate(parent){
+
   }
 
   destroy(kids) {
@@ -84,31 +87,19 @@ class DynamicRoolz{
 $(document).ready(function(){
   $('.collapsible').collapsible();
   $('select').material_select();
-
+  
+  //initializes a DynamicRoolz instance on page ready. DynamicRoolz handles the majority of the functionality for the UI and UX
   const roolOpt = new DynamicRoolz();
-
-
-  $(document).on('change', '.dynarool', function(){
-    console.log('change from dynarool')
-    let val = $(this).closest('select').data('count');
-    let par = $(this).closest('select').data('parent');
-    let gnuRule = this.value;
-    let gnuType = $(this).find(':selected').data('type');
-    if (roolOpt.count > 0) {
-      if (roolOpt.dependents[par] != null){
-        roolOpt.dependents[par] = val;
-      }
-    }else{
-      roolOpt.dependents[par] = [];
-    }
-    //  = this.data('rooltype');
-    console.log(`gnuRule is ${gnuRule}.type is ${gnuType}.par is ${par}val is ${val}`);
-    if (gnuType == 'basic') {
-      roolOpt.gnuBas(par,val);
-    } else {
-      roolOpt.gnuCon(par,val);
-    }
+  
+  $(document).on('change', 'select', function(){
+    let selected = $(this).closest('select');
+    let type = $(this).find(':selected').data('type');
+    let rool = this.value;
+    console.log(`selected is ${selected}, type is ${type}, rool is ${rool}`)
+    roolOpt.setOnSelect(selected, type, rool);
   })
+
+  console.log('this' + 'that');
 });
 
   
