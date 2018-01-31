@@ -15,13 +15,13 @@ class DynamicRoolz{
     if (roolActual == 'Rool::Iterate'){
       this.gnuIterate(selected);
     }else if (roolType == 'basic'){
-      this.gnuBasic(selected)
+      this.basicEntry(selected)
     }else{
-      this.gnuContainer(selected);
+      this.addSelect(selected);
     }
   }
 
-  gnuBasic(selected) {
+  basicEntry(selected) {
     let parent = selected.data('parent');
 
     let gnuHtml = `<p>Enter the operand that the rule will be evaluating against here: </p><input type="text" id="operand${this.count}" name="operand" placeholder="Enter the operand here"></input><p>Enter the data key used to access a value in the datahash here. Make sure it's in the same format as your hash above:</p><input type="text" id="datakey${this.count}" name="datakey" placeholder="Enter your data key here"></input>`;
@@ -29,45 +29,57 @@ class DynamicRoolz{
     if (selected.data('rool') == 'Rool::Send') {
       let sentMethod = `<p>Enter the method that will be applied in string form here: </p><input type="text" id="mthd${this.count}" name="method" placeholder="Enter the method here"></input><p>Select the Basic Rool to be applied: </p>`;
 
-      let basic = sentMethod + `<select class='browser-default' class='subRool' id=sentRool${this.count}'><option disabled selected value>Choose a Rool</option`+ this.basicRoolz + '</select'
+      let basic = sentMethod + `<select class='browser-default' class='subRool' id=sentRool${this.count}'><option disabled selected value>Choose a Rool</option`+ this.basicRoolz + '</select>'
 
       gnuHtml = gnuHtml + basic;
     }
 
     if (this.count > 0){
-      selected.before(`<p id='statement${this.count}'>The rule below is Rool-${this.count}. It is a child rule of Rool-${parent}</p>`);
+      if ($(`#form${parent}`).length == 0){
+        selected.before(`<p id='form${this.count}'>The rule form below is for Rool-${this.count}. It is a child rule of Rool-${parent}</p>`)
+      }
+      if ($(`#btn-for${parent}`).length == 0 ){
+        $(`#form${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}">Add Child Rule for Rool-${parent}</button>`);
+      }
     }
 
-    selected.append(gnuHtml);
-    this.count ++;
+    selected.after(gnuHtml);
   }
 
-  gnuContainer(selected) {
+  addSelect(selected) {
     let parent = selected.data('count');
     let grandparent = selected.data('parent');
     let col = parseInt(selected.data('col'), 10) - 1;
     let offset = 12 - col;
     this.count ++;
 
-    let nextRool = `<select class='browser-default' id='rool${this.count}' data-count='${this.count}' data-parent='${parent}' data-col='${col}' data-type='null' data-rool='null' data-basrool='null'  data-conrool='null' data-operand='null' data-key='null' data-mthd='null'><option disabled selected value>Choose a Rool</option`;
-    let conMerge = nextRool + this.containerRoolz;
-    let basMerge = conMerge + this.basicRoolz;
-    let fullMerge = basMerge + `<optgroup label="Delete Rool"><option data-type="destroy" value="destroy"> Destroy Rool and Children</option></optgroup></select>`;
-    let gnuHtml = fullMerge + `<div class="col s${col} offset-s${offset}" id='testkid${this.count}'></div>`;
+    let nextRool = `<select class='browser-default' id='rool${this.count}' data-count='${this.count}' data-parent='${parent}' data-col='${col}' data-type='null' data-rool='null' data-basrool='null'  data-conrool='null' data-operand='null' data-key='null' data-mthd='null'><option disabled selected value>Choose a Rool</option>`;
+    let lastMerge = `<optgroup label="Delete Rool"><option data-type="destroy" value="destroy"> Destroy Rool and Children</option></optgroup></select>`;
 
-    if (parent == 0) {
-      selected.before('The rule below is Rool-0. It is the initial rule and all other rules will be children');
-    } else {
-      selected.before(`<p id='statement${parent}'>The rule below is Rool-${parent}. It is a child rule of Rool-${grandparent}</p>`);
-    }
-    console.log('col is ' + col);
-    console.log(gnuHtml);
-    if (col > 6) {
-      let nextDiv = $('#testkid' + parent);
-      nextDiv.append(gnuHtml);
+    if (col > 7){
+      console.log('got into greater than 7');
+      let conMerge = nextRool + this.containerRoolz;
+      let basMerge = conMerge + this.basicRoolz;
+      let fullMerge = basMerge + lastMerge;
+      let gnuHtml = fullMerge + `<div class="col s${col} offset-s${offset}" id='testkid${this.count}'></div>`;
+      $('#testkid' + parent).append(gnuHtml);
     }else{
-      alert(`Due to spacing issues, you will only be able to nest Basic rool types within Rool-${parent} going forward.`)
+      let basMerge = nextRool + this.basicRoolz;
+      let gnuHtml = basMerge + lastMerge;
+      $('#testkid' + parent).append(gnuHtml);
+      if (col == 7){
+        alert(`Due to spacing issues, you will only be able to nest Basic rool types within Rool-${parent} going forward.`);
+      }
     }
+
+    if ($(`#statement${parent}`).length == 0){
+      selected.before(`<p id=statement${parent}>The rule below is Rool-${parent}. It is a child of Rool-${grandparent}</p>`);
+    }
+    
+    if ($(`#btn-for${parent}`).length == 0 ){
+      $(`#statement${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}">Add Child Rule for Rool-${parent}</button>`);
+    }
+
 
     
   }
@@ -75,6 +87,8 @@ class DynamicRoolz{
   gnuIterate(parent){
 
   }
+
+
 
   destroy(kids) {
     kids.children().remove();
@@ -95,11 +109,17 @@ $(document).ready(function(){
     let selected = $(this).closest('select');
     let type = $(this).find(':selected').data('type');
     let rool = this.value;
-    console.log(`selected is ${selected}, type is ${type}, rool is ${rool}`)
+    console.log($(this).not('.subRool'));
     roolOpt.setOnSelect(selected, type, rool);
   })
 
-  console.log('this' + 'that');
+  $(document).on('click', '.new-child', function(){
+    let id = $(this).data('id');
+    let parent = $(`#rool${id}`);
+    roolOpt.addSelect(parent);
+    console.log(id);
+  })
+
 });
 
   
