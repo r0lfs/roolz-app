@@ -28,9 +28,7 @@
           |  Rool::Any
         option[value='Rool::Not' data-type='container']
           |  Rool::Not
-        option[value='Rool::Iterate' data-type='container']
-          |  Rool::Iterate
-
+        
       optgroup[label='Basic Rules']
         option[value='Rool::Blank' data-type='basic']
           |  Rool::Blank
@@ -48,12 +46,16 @@
           |  Rool::LessThan
         option[value='Rool::Regex' data-type='basic']
           |  Rool::Regex
-        option[value='Rool::Send' data-type='basic']
-          |  Rool::Send
+        
         option[value='Rool::Subset' data-type='basic']
           |  Rool::Subset
         option[value='Rool::True' data-type='basic']
           |  Rool::True
+      optgroup[label='Special']
+        option[value='Rool::Iterate' data-type='container']
+          |  Rool::Iterate
+        option[value='Rool::Send' data-type='basic']
+          |  Rool::Send
 
       optgroup[label='Restart']
         option[data-type='destroy']
