@@ -7,61 +7,62 @@
       |  to ensure you understand what the rules do and how to use the app. If you already know how to use Roolz, just click 'Start Processing' below to begin!
       br
       
-  #inform.col.l12.input-field
-    p
-      |This is where the dataset you want to evaluate goes. Remember, this has to be in Ruby hash format with key value pairs encapsulated by '{' and '}'. For example, you could put
-        in {a_key: 5, noki: [1,2,3,4,5]} and that will be valid. You can't, however, try to pass in a non hash object like arrays [1,2] or strings 'string' without having them paired with a key and inside brackets.
+  form#hate    
+    #inform.col.l12.input-field
+      p
+        |This is where the dataset you want to evaluate goes. Remember, this has to be in Ruby hash format with key value pairs encapsulated by '{' and '}'. For example, you could put
+          in {a_key: 5, noki: [1,2,3,4,5]} and that will be valid. You can't, however, try to pass in a non hash object like arrays [1,2] or strings 'string' without having them paired with a key and inside brackets.
 
-    input[type="text" id='data-hash' name="Dataset" placeholder="Enter your dataset in ruby hash form here"]
+      input[type="text" id='data-hash' name="Dataset" placeholder="Enter your dataset in ruby hash form here"]
 
-  #testkidnull
-    button#subBtn.btn.waves-effect.waves-light.red.darken-4
-      |  Submit Roolz and Data for Processing
+    #testkidnull
+      button#subBtn.btn.waves-effect.waves-light.red.darken-4
+        |  Submit Roolz and Data for Processing
 
-    select[class='browser-default optionable' id='rool0' data-count='0' data-parent='null' data-col='11' data-basrool='null'  data-conrool='null' data-operand='null' data-key='null' data-mthd='null']
-      option[value='' disabled selected]
-        |  Choose a Rool
-      optgroup[label='Container Rules']
-        option[value='Rool::All' data-type='container']
-          |  Rool::All
-        option[value='Rool::Any' data-type='container']
-          |  Rool::Any
-        option[value='Rool::Not' data-type='container']
-          |  Rool::Not
-        
-      optgroup[label='Basic Rules']
-        option[value='Rool::Blank' data-type='basic']
-          |  Rool::Blank
-        option[value='Rool::Email' data-type='basic']
-          |  Rool::Email
-        option[value='Rool::Equal' data-type='basic']
-          |  Rool::Email
-        option[value='Rool::False' data-type='basic']
-          |  Rool::False
-        option[value='Rool::GreaterThan' data-type='basic']
-          |  Rool::GreaterThan
-        option[value='Rool::Include' data-type='basic']
-          |  Rool::Include
-        option[value='Rool::LessThan' data-type='basic']
-          |  Rool::LessThan
-        option[value='Rool::Regex' data-type='basic']
-          |  Rool::Regex
-        
-        option[value='Rool::Subset' data-type='basic']
-          |  Rool::Subset
-        option[value='Rool::True' data-type='basic']
-          |  Rool::True
-      optgroup[label='Special']
-        option[value='Rool::Iterate' data-type='container']
-          |  Rool::Iterate
-        option[value='Rool::Send' data-type='basic']
-          |  Rool::Send
+      select[class='browser-default optionable' name="Rool" id='rool0' data-count='0' data-parent='null' data-col='11' data-basrool='null'  data-conrool='null' data-operand='null' data-key='null' data-mthd='null']
+        option[value='' disabled selected]
+          |  Choose a Rool
+        optgroup[label='Container Rules']
+          option[value='Rool::All' data-type='container']
+            |  Rool::All
+          option[value='Rool::Any' data-type='container']
+            |  Rool::Any
+          option[value='Rool::Not' data-type='container']
+            |  Rool::Not
+          
+        optgroup[label='Basic Rules']
+          option[value='Rool::Blank' data-type='basic']
+            |  Rool::Blank
+          option[value='Rool::Email' data-type='basic']
+            |  Rool::Email
+          option[value='Rool::Equal' data-type='basic']
+            |  Rool::Email
+          option[value='Rool::False' data-type='basic']
+            |  Rool::False
+          option[value='Rool::GreaterThan' data-type='basic']
+            |  Rool::GreaterThan
+          option[value='Rool::Include' data-type='basic']
+            |  Rool::Include
+          option[value='Rool::LessThan' data-type='basic']
+            |  Rool::LessThan
+          option[value='Rool::Regex' data-type='basic']
+            |  Rool::Regex
+          
+          option[value='Rool::Subset' data-type='basic']
+            |  Rool::Subset
+          option[value='Rool::True' data-type='basic']
+            |  Rool::True
+        optgroup[label='Special']
+          option[value='Rool::Iterate' data-type='container']
+            |  Rool::Iterate
+          option[value='Rool::Send' data-type='basic']
+            |  Rool::Send
 
-      optgroup[label='Restart']
-        option[data-type='destroy']
-          |  Restart and Reset Datahash
-    #testkid0.col.s11.offset-s1.card.grey.lighten-5
-  
+        optgroup[label='Restart']
+          option[data-type='destroy']
+            |  Restart and Reset Datahash
+      #testkid0.col.s11.offset-s1.card.grey.lighten-5
+    
 
 
 

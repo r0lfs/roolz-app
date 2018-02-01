@@ -34,12 +34,12 @@ class DynamicRoolz{
   basicEntry(selected) {
     let parent = selected.data('parent');
 
-    let gnuHtml = `<p id='a${this.count}'>Enter the operand that the rule will be evaluating against here: </p><input type="text" id="operand${this.count}" name="operand" placeholder="Enter the operand here"></input><p id='b${this.count}'>Enter the data key used to access a value in the datahash here. Make sure it's in the same format as your hash above:</p><input type="text" id="datakey${this.count}" name="datakey" placeholder="Enter your data key here"></input>`;
+    let gnuHtml = `<p id='b${this.count}'>Enter the data key used to access a value in the datahash here. Make sure it's in the same format as your hash above:</p><input type="text" id="datakey${this.count}" name="data_key" placeholder="Enter your data key here"></input><p id='a${this.count}'>Enter the operand that the rule will be evaluating against here: </p><input type="text" id="operand${this.count}" name="operand" placeholder="Enter the operand here"></input>`;
 
     if (selected.data('rool') == 'Rool::Send') {
-      let sentMethod = `<p id='c${this.count}'>Enter the method that will be applied in string form here: </p><input type="text" id="mthd${this.count}" name="method" placeholder="Enter the method here"></input><p id='d${this.count}'>Select the Basic Rool to be applied: </p>`;
+      let sentMethod = `<p id='c${this.count}'>Enter the method that will be applied in string form here: </p><input type="text" id="mthd${this.count}" name="mthd" placeholder="Enter the method here"></input><p id='d${this.count}'>Select the Basic Rool to be applied: </p>`;
 
-      let basic = sentMethod + `<select class='browser-default subRool' id=sentRool${this.count}'><option disabled selected value>Choose a Rool</option`+ this.basicRoolz + '</select>'
+      let basic = sentMethod + `<select class='browser-default subRool' name="rool" id=sentRool${this.count}'><option disabled selected value>Choose a Rool</option`+ this.basicRoolz + '</select>'
 
       gnuHtml = gnuHtml + basic;
     }
@@ -48,9 +48,9 @@ class DynamicRoolz{
       if ($(`#form${parent}`).length == 0){
         selected.before(`<p id='form${this.count}'>The rule form below is for Rool-${this.count}. It is a child rule of Rool-${parent}</p>`)
       }
-      if ($(`#btn-for${parent}`).length == 0 ){
-        $(`#form${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}">Add Child Rule for Rool-${parent}</button>`);
-      }
+      // if ($(`#btn-for${parent}`).length == 0 ){
+      //   $(`#form${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}" type="button">Add Child Rule for Rool-${parent}</button>`);
+      // }
     }
 
     selected.after(gnuHtml);
@@ -63,7 +63,7 @@ class DynamicRoolz{
     let offset = 12 - col;
     this.count ++;
  
-    let nextRool = `<select class='optionable browser-default' id='rool${this.count}' data-count='${this.count}' data-parent='${parent}' data-col='${col}' data-type='null' data-rool='null' data-basrool='null'  data-conrool='null' data-operand='null' data-key='null' data-mthd='null'><option disabled selected value>Choose a Rool</option>`;
+    let nextRool = `<select class='optionable browser-default' id='rool${this.count}' name="Rool" data-count='${this.count}' data-parent='${parent}' data-col='${col}' data-type='null' data-rool='null' data-basrool='null'  data-conrool='null' data-operand='null' data-key='null' data-mthd='null'><option disabled selected value>Choose a Rool</option>`;
     let lastMerge = `<optgroup label="Delete Rool"><option data-type="destroy" value="destroy"> Destroy Rool and Children</option></optgroup></select>`;
 
     if (col > 6){
@@ -88,7 +88,7 @@ class DynamicRoolz{
     }
     
     if ($(`#btn-for${parent}`).length == 0 ){
-      $(`#statement${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}">Add Child Rule for Rool-${parent}</button>`);
+      $(`#statement${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}" type="button">Add Child Rule for Rool-${parent}</button>`);
     }
    
   } //ends addSelect
@@ -96,18 +96,18 @@ class DynamicRoolz{
   gnuIterate(selected){
     let parent = selected.data('parent');
 
-    let initial = `<p id='e${this.count}'>Enter the operand that the rule will be evaluating against here: </p><input type="text" id="operand${this.count}" name="operand" placeholder="Enter the operand here"></input><p id='f${this.count}'>Enter the data key used to access a value in the datahash here. Make sure it's in the same format as your hash above:</p><input type="text" id="datakey${this.count}" name="datakey" placeholder="Enter your data key here"></input><p id='g${this.count}'>Select the Basic Rool to be applied: </p>`;
+    let initial = `<p id='f${this.count}'>Enter the data key used to access a value in the datahash here. Make sure it's in the same format as your hash above:</p><input type="text" id="datakey${this.count}" name="data_key" placeholder="Enter your data key here"></input><p id='a${this.count}'>Enter the operand that the rule will be evaluating against here: </p><input type="text" id="operand${this.count}" name="operand" placeholder="Enter the operand here"></input><p id='g${this.count}'>Select the Basic Rool to be applied: </p>`;
 
-    let basic = initial + `<select class='browser-default subRool' id='sentRool${this.count}'><option disabled selected value>Choose a Rool</option>` + this.basicRoolz + `</select><p id='h${this.count}'>Select the Container Rool to be applied: </p>`;
+    let basic = initial + `<select class='browser-default subRool' name="bas_rool" id='sentRool${this.count}'><option disabled selected value>Choose a Rool</option>` + this.basicRoolz + `</select><p id='h${this.count}'>Select the Container Rool to be applied: </p>`;
     
-    let gnuHtml = basic + `<select class='browser-default looprool' id='looprool${this.count}'><option disabled selected value>Choose a Rool</option>` + this.containerRoolz + '</select>';
+    let gnuHtml = basic + `<select class='browser-default looprool' name="con_rool" id='looprool${this.count}'><option disabled selected value>Choose a Rool</option>` + this.containerRoolz + '</select>';
     
     if (this.count > 0){
       if ($(`#form${parent}`).length == 0){
         selected.before(`<p id='form${this.count}'>The rule form below is for Rool-${this.count}. It is a child rule of Rool-${parent}</p>`)
       }
       if ($(`#btn-for${parent}`).length == 0 ){
-        $(`#form${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}">Add Child Rule for Rool-${parent}</button>`);
+        $(`#form${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}" type="button" >Add Child Rule for Rool-${parent}</button>`);
       }
     }
 
@@ -160,6 +160,81 @@ class DynamicRoolz{
   } //ends destroy
 }
 
+function hashCursion(multiArr, index){
+  let basic = []
+  let cont = []
+    let gnuLoop = [];
+
+  
+  console.log('in main recursion. index is ' + index);
+
+  for (var i = index; i < multiArr.length; i++) {
+    let name = multiArr[i].name;
+    let val = multiArr[i].value;
+    console.log('first level of hash loop. i is ' + i)
+    if (name == 'Rool') {
+      console.log(val)
+      if (val != 'Rool::Any' && val != 'Rool::All' && val != 'Rool::Not'){
+        if (i == 0) {
+          return basCursion(multiArr, (i + 1))
+        }
+        gnuLoop.push(val + i)
+      }else{
+        gnuLoop.push(val + i);
+      }
+    }
+  }
+  
+
+  
+  // for (var i = index; i < multiArr.length; i++) {
+  //   let name = multiArr[index].name;
+  //   let val = multiArr[index ].value;
+  //   console.log('first level of hash loop. i is ' + i)
+
+  //   if (name == 'Rool') {
+  //     if (val != 'Rool::Any' && val != 'Rool::All' && val != 'Rool::Not'){
+  //       console.log('inside basic sender. index is ' + index + ' and i is ' + i)
+  //       i ++
+  //       return gnuLoop[val] = basCursion(multiArr, i)
+  //     }else{
+  //       i ++;
+  //       gnuLoop[val] = []
+  //       if (conRoolz.includes(multiArr[i].value)){
+  //         let kids = hashCursion(multiArr, i);
+  //         gnuLoop[val].push(kids);
+  //       }else{
+  //         gnuLoop[val] = basCursion(multiArr, (i + 1))
+  //       }
+        
+  //     }
+  //   }
+      
+  // }
+  return gnuLoop
+}
+
+function basCursion(multiArr, index){
+  let basAttr = {}
+  let name = multiArr[index].name;
+  let val = multiArr[index - 1].value;
+
+  console.log('in basic recursion. val is ' + val)
+  for (var k = 0; k < 4; k++) {
+    let s = index + k;
+    console.log("s is " + s + ' k is ' + k)
+    basAttr[multiArr[s].name] = multiArr[s].value;
+    if (k == 1 && val != 'Rool::Iterate' && val != 'Rool::Send') {
+      return basAttr;
+    }
+    console.log('val is ' + val + " basAttr is below")
+    console.log(basAttr)
+  }
+  return basAttr;
+}
+
+
+
 
 $(document).ready(function(){
   $('.collapsible').collapsible();
@@ -179,19 +254,37 @@ $(document).ready(function(){
     }
     roolOpt.setOnSelect(selected, type, rool);
     selected.addClass('purple-text darken-4');
-  })
+  });
 
   $(document).on('click', '.new-child', function(){
     let id = $(this).data('id');
     let parent = $(`#rool${id}`);
     roolOpt.addSelect(parent);
     console.log(id);
-  })
+  });
+
+  $(document).on('submit', function(e){
+    e.preventDefault();
+    let formData = $('form').serializeArray();
+    let dataHash = formData.shift();
+    console.log(formData);
+    console.log(dataHash);
+    let gunny = {};
+    gunny[formData[0].value] = hashCursion(formData, 0)
+    funny = JSON.stringify(gunny);
+    console.log(funny);
+    return gunny;
+    
+  });
+
+  
 
 });
 
-  
-  // $('.start-rule').change(function(){
+//"{\"^o\":\"Rool::All\",\"children\":[{\"^o\":\"Rool::Any\",\"children\":[{\"^o\":\"Rool::True\",\"data_key\":null,\"operand\"
+//:null,\"result\":null,\"message\":null},{\"^o\":\"Rool::False\",\"data_key\":null,\"operand\":null,\"result\":null,\"message\"
+//:null}],\"result\":null,\"message\":null},{\"^o\":\"Rool::True\",\"data_key\":null,\"operand\":null,\"result\":null,\"message\"
+//:null},{\"^o\":\"Rool::GreaterThan\",\"data_key\":\":foo\",\"operand\":10,\"result\":null,\"message\":null}],\"result\":null,\"message\":null}"   // $('.start-rule').change(function(){
   //   console.log($('.input-field').children('.testkid'));
   //   let par = $('.input-field').children('.testkid');
   //  if (initialRule) {
