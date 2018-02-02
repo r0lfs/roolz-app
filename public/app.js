@@ -10,15 +10,10 @@ class DynamicRoolz{
   }
 
   setOnSelect(selected, roolType, roolActual){
-    selected.data('rool',roolActual);
-    selected.data('type', roolType);
-
     if (selected.hasClass('subRool')) {
-      selected.siblings('.optionable').data('basrool', roolActual);
       return
     }
     if (selected.hasClass('looprool')) {
-      selected.siblings('.optionable').data('conrool', roolActual);
       return
     }
 
@@ -33,6 +28,9 @@ class DynamicRoolz{
 
   basicEntry(selected) {
     let parent = selected.data('parent');
+    if (this.count > 0 && $(`#form${parent}`).length == 0){
+      selected.before(`<p id='form${this.count}'>The rule form below is for Rool-${this.count}. It is a child rule of Rool-${parent}</p>`)
+    }
 
     let gnuHtml = `<p id='b${this.count}'>Enter the data key used to access a value in the datahash here. Make sure it's in the same format as your hash above:</p><input type="text" id="datakey${this.count}" name="data_key" placeholder="Enter your data key here"></input><p id='a${this.count}'>Enter the operand that the rule will be evaluating against here: </p><input type="text" id="operand${this.count}" name="operand" placeholder="Enter the operand here"></input>`;
 
@@ -41,17 +39,10 @@ class DynamicRoolz{
 
       let basic = sentMethod + `<select class='browser-default subRool' name="rool" id=sentRool${this.count}'><option disabled selected value>Choose a Rool</option`+ this.basicRoolz + '</select>'
 
-      gnuHtml = gnuHtml + basic;
+      let gnuHtml = gnuHtml + basic;
     }
     
-    if (this.count > 0){
-      if ($(`#form${parent}`).length == 0){
-        selected.before(`<p id='form${this.count}'>The rule form below is for Rool-${this.count}. It is a child rule of Rool-${parent}</p>`)
-      }
-      // if ($(`#btn-for${parent}`).length == 0 ){
-      //   $(`#form${parent}`).after(`<button class="waves-effect waves-light btn new-child" data-id="${parent}" id="btn-for${parent}" type="button">Add Child Rule for Rool-${parent}</button>`);
-      // }
-    }
+    
 
     selected.after(gnuHtml);
   } //ends basicEntry
@@ -138,80 +129,35 @@ class DynamicRoolz{
     }else{
       alert("Sorry, once a rule has been selected, it cannot be changed. Choose the 'Destroy' option from the menu to make another selection");
     }
-    //  if (type == 'special'){
-    //   alert("Sorry, you can't change Rool::Send or Rool::Iterate after they have been selected. You'll have to choose the Destroy option from the menu.");
-    // }else if (type != old ){
-    //   alert("You can only change rules if they are of the same type!");
-    // }else{
-    //   let changes = confirm(`If you change Rool-${id}'s type, all child rules and their data will be destroyed. Are you sure you want to change ${defi} to ${rool}?`);
-    //   if (changes == true) {
-
-    //     let doomedArray = [$(`#statement${id}`), $(`#btn-for${id}`), $(`#form${id}`), $(`#operand${id}`), $(`#datakey${id}`), $(`#a${id}`), $(`#b${id}`), 
-    //       $(`#c${id}`), $(`#d${id}`),$(`#e${id}`), $(`#f${id}`), $(`#g${id}`), $(`#h${id}`), $(`#sentRool${id}`), $(`#mthd${id}`), $(`#looprool${id}`), $(`#only${id}`) ];
-    //     for (var i =  doomedArray.length - 1; i >= 0; i--) {
-    //       doomedArray[i].remove();
-    //     }
-    //     $(`testkid${id}`).remove();
-    //     this.setOnSelect(selected, type, rool);
-    //   }else{
-    //     alert("Cancelling change");
-    //   }
-    
   } //ends destroy
 }
 
-function hashCursion(multiArr, index){
-  let basic = []
-  let cont = []
-    let gnuLoop = [];
 
-  
-  console.log('in main recursion. index is ' + index);
-
+function hashCursion(multiArr, modArr, index){
+    
+  console.log('in main recursion. index is ' + index);  
+    
   for (var i = index; i < multiArr.length; i++) {
     let name = multiArr[i].name;
-    let val = multiArr[i].value;
+    let val = multiArr[i ].value;
     console.log('first level of hash loop. i is ' + i)
+
     if (name == 'Rool') {
-      console.log(val)
+      let gnuname = val + i
+      modArr[gnuname] = []
       if (val != 'Rool::Any' && val != 'Rool::All' && val != 'Rool::Not'){
-        if (i == 0) {
-          return basCursion(multiArr, (i + 1))
-        }
-        gnuLoop.push(val + i)
+        console.log('inside basic sender. index is ' + index + ' and i is ' + i)
+        i ++
+        modArr[gnuname].push(basCursion(multiArr, i))
       }else{
-        gnuLoop.push(val + i);
+        let gnuLoop = {}
+        i++;
+        modArr[gnuname].push(hashCursion(multiArr, gnuLoop, i))
       }
     }
-  }
-  
-
-  
-  // for (var i = index; i < multiArr.length; i++) {
-  //   let name = multiArr[index].name;
-  //   let val = multiArr[index ].value;
-  //   console.log('first level of hash loop. i is ' + i)
-
-  //   if (name == 'Rool') {
-  //     if (val != 'Rool::Any' && val != 'Rool::All' && val != 'Rool::Not'){
-  //       console.log('inside basic sender. index is ' + index + ' and i is ' + i)
-  //       i ++
-  //       return gnuLoop[val] = basCursion(multiArr, i)
-  //     }else{
-  //       i ++;
-  //       gnuLoop[val] = []
-  //       if (conRoolz.includes(multiArr[i].value)){
-  //         let kids = hashCursion(multiArr, i);
-  //         gnuLoop[val].push(kids);
-  //       }else{
-  //         gnuLoop[val] = basCursion(multiArr, (i + 1))
-  //       }
-        
-  //     }
-  //   }
       
-  // }
-  return gnuLoop
+  }
+  return modArr
 }
 
 function basCursion(multiArr, index){
@@ -270,7 +216,7 @@ $(document).ready(function(){
     console.log(formData);
     console.log(dataHash);
     let gunny = {};
-    gunny[formData[0].value] = hashCursion(formData, 0)
+    hashCursion(formData, gunny, 0)
     funny = JSON.stringify(gunny);
     console.log(funny);
     return gunny;
@@ -281,34 +227,3 @@ $(document).ready(function(){
 
 });
 
-//"{\"^o\":\"Rool::All\",\"children\":[{\"^o\":\"Rool::Any\",\"children\":[{\"^o\":\"Rool::True\",\"data_key\":null,\"operand\"
-//:null,\"result\":null,\"message\":null},{\"^o\":\"Rool::False\",\"data_key\":null,\"operand\":null,\"result\":null,\"message\"
-//:null}],\"result\":null,\"message\":null},{\"^o\":\"Rool::True\",\"data_key\":null,\"operand\":null,\"result\":null,\"message\"
-//:null},{\"^o\":\"Rool::GreaterThan\",\"data_key\":\":foo\",\"operand\":10,\"result\":null,\"message\":null}],\"result\":null,\"message\":null}"   // $('.start-rule').change(function(){
-  //   console.log($('.input-field').children('.testkid'));
-  //   let par = $('.input-field').children('.testkid');
-  //  if (initialRule) {
-  //    if (confirm(`You have already selected ${initialRule} as your starting rule type. Are you sure you want to change it to ${this.value}? Doing so will cause all form data to be lost`)) {
-  //      initialRule = this.value;
-  //      initialType = $(this).find(':selected').data('type');
-  //      console.log(`initialRule is now ${initialRule}. Type is now ${initialType}.`);
-  //    }
-  //  } else {
-  //    initialRule = this.value;
-  //    initialType = $(this).find(':selected').data('type');
-  //    //  = this.data('rooltype');
-   //    console.log(`initialRule is ${initialRule}.type is ${initialType}.`);
-   //  }
-   //  if (initialRule != oldVal){
-  //     console.log('it changed');
-  //     oldVal = initialRule;
-  //     roolOpt.destroy();
-  //     $('#inform').show();
-  //     if (initialType == 'basic') {
-  //       roolOpt.gnuBas($(par));
-  //     } else {
-  //       roolOpt.gnuCon($(par));
-  //       console.log('guncon werked from initial')
-  //     }
-   //  }
-  // })
